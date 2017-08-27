@@ -50,8 +50,13 @@ public class JwtMap implements Map<String,Object> {
             // https://github.com/jwtk/jjwt/issues/122:
             // The JWT RFC *mandates* NumericDate values are represented as seconds.
             // Because Because java.util.Date requires milliseconds, we need to multiply by 1000:
+
             long seconds = ((Number) v).longValue();
             long millis = seconds * 1000;
+            // for supporting milliseconds in some cases
+            if ((seconds / 1000000000) > 9) {
+                millis = seconds;
+            }
             return new Date(millis);
         } else if (v instanceof String) {
             // https://github.com/jwtk/jjwt/issues/122
